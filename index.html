@@ -2510,27 +2510,21 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
               <button class="btn btn-primary btn-sm" onclick="openIdpModal('idp-informal-reg-modal')">기타 학습 유형 등록</button>
             </div>
             <table class="main-table">
-              <thead><tr><th>NO</th><th>학습 유형명</th><th>설명</th><th>파일 첨부</th><th>비용 입력</th><th>사용여부</th><th>관리</th></tr></thead>
+              <thead><tr><th>NO</th><th>학습 유형명</th><th>설명</th><th>입력항목 설정</th><th>관리</th></tr></thead>
               <tbody>
                 <tr>
                   <td>3</td><td>사외교육</td><td>외부 기관에서 수강한 교육</td>
-                  <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32">필수</span></td>
-                  <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32">사용</span></td>
-                  <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32">사용</span></td>
+                  <td><button class="btn-sm" onclick="openInputFieldModal('사외교육')">입력항목 설정</button></td>
                   <td><button class="btn-sm" onclick="openIdpModal('idp-informal-reg-modal')">수정</button></td>
                 </tr>
                 <tr>
                   <td>2</td><td>도서교육</td><td>업무 관련 도서 독서</td>
-                  <td><span class="badge-tag" style="background:#fce4ec;color:#880e4f">선택</span></td>
-                  <td><span class="badge-tag" style="background:#fce4ec;color:#880e4f">미사용</span></td>
-                  <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32">사용</span></td>
+                  <td><button class="btn-sm" onclick="openInputFieldModal('도서교육')">입력항목 설정</button></td>
                   <td><button class="btn-sm" onclick="openIdpModal('idp-informal-reg-modal')">수정</button></td>
                 </tr>
                 <tr>
                   <td>1</td><td>필드&amp;포럼</td><td>내부 포럼/세미나 참석</td>
-                  <td><span class="badge-tag" style="background:#fce4ec;color:#880e4f">선택</span></td>
-                  <td><span class="badge-tag" style="background:#fce4ec;color:#880e4f">미사용</span></td>
-                  <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32">사용</span></td>
+                  <td><button class="btn-sm" onclick="openInputFieldModal('필드&포럼')">입력항목 설정</button></td>
                   <td><button class="btn-sm" onclick="openIdpModal('idp-informal-reg-modal')">수정</button></td>
                 </tr>
               </tbody>
@@ -2866,30 +2860,6 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
               <div class="ifg-label">설명</div>
               <div class="ifg-control"><input type="text" class="input" placeholder="유형 설명 입력" style="width:250px"></div>
             </div>
-            <div class="ifg-row">
-              <div class="ifg-label">파일 첨부</div>
-              <div class="ifg-control" style="gap:14px;">
-                <label class="radio-row"><input type="radio" name="inf-file" checked> 선택</label>
-                <label class="radio-row"><input type="radio" name="inf-file"> 필수</label>
-                <label class="radio-row"><input type="radio" name="inf-file"> 미사용</label>
-              </div>
-            </div>
-            <div class="ifg-row">
-              <div class="ifg-label">비용 입력</div>
-              <div class="ifg-control" style="gap:14px;">
-                <label class="radio-row"><input type="radio" name="inf-cost" checked> 선택</label>
-                <label class="radio-row"><input type="radio" name="inf-cost"> 필수</label>
-                <label class="radio-row"><input type="radio" name="inf-cost"> 미사용</label>
-              </div>
-            </div>
-            <div class="ifg-row">
-              <div class="ifg-label">사용여부</div>
-              <div class="ifg-control" style="gap:14px;">
-                <label class="radio-row"><input type="radio" name="inf-use" checked> 선택</label>
-                <label class="radio-row"><input type="radio" name="inf-use"> 필수</label>
-                <label class="radio-row"><input type="radio" name="inf-use"> 미사용</label>
-              </div>
-            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -2956,8 +2926,8 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
               <th>연도</th>
               <th>계획수립 월</th>
               <th>계획수립 유형</th>
-              <th>과정/학습명</th>
               <th>학습 유형</th>
+              <th>교육명</th>
               <th>예상 학습시간</th>
               <th>교육비</th>
             </tr></thead>
@@ -2966,8 +2936,8 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>2026</td>
                 <td>3월</td>
                 <td>자기개발</td>
-                <td>리더십 역량 강화 과정</td>
                 <td>온라인</td>
+                <td>리더십 역량 강화 과정</td>
                 <td>8시간</td>
                 <td>150,000원</td>
               </tr>
@@ -2975,8 +2945,8 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>2026</td>
                 <td>6월</td>
                 <td>자기개발</td>
-                <td>데이터 분석 기초</td>
                 <td>온라인</td>
+                <td>데이터 분석 기초</td>
                 <td>12시간</td>
                 <td>무료</td>
               </tr>
@@ -2984,8 +2954,8 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>2026</td>
                 <td>9월</td>
                 <td>리더십</td>
-                <td>팀장 리더십 Workshop</td>
                 <td>오프라인</td>
+                <td>팀장 리더십 Workshop</td>
                 <td>16시간</td>
                 <td>200,000원</td>
               </tr>
@@ -2993,9 +2963,9 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>2026</td>
                 <td>11월</td>
                 <td>리더십</td>
-                <td>외부 데이터사이언스 부트캠프</td>
                 <td>사외교육</td>
-                <td>40시간</td>
+                <td>외부 데이터사이언스 부트캠프</td>
+                <td>3일/24시간</td>
                 <td>500,000원</td>
               </tr>
             </tbody>
@@ -3263,6 +3233,43 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
         <div class="modal-footer">
           <button class="btn btn-reset" onclick="closeIdpModal('idp-type-modal')">취소</button>
           <button class="btn btn-primary" onclick="closeIdpModal('idp-type-modal');alert('저장되었습니다.')">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 입력항목 설정 모달 -->
+    <div class="modal-overlay" id="idp-input-field-modal" onclick="if(event.target===this)closeIdpModal('idp-input-field-modal')">
+      <div class="modal-box" style="width:680px;max-height:90vh;overflow-y:auto;">
+        <div class="modal-header">
+          <span>입력항목 설정 — <span id="input-field-type-name" style="font-weight:400;opacity:0.85;"></span></span>
+          <button class="modal-close" onclick="closeIdpModal('idp-input-field-modal')">×</button>
+        </div>
+        <div class="modal-body" style="padding:18px 24px;">
+          <div style="font-size:12px;color:#666;margin-bottom:14px;">
+            ※ 사용자가 기타 학습계획 등록 시 표시할 항목과 필수 여부를 설정합니다. 미사용 선택 시 사용자 화면에 노출되지 않습니다.
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="main-table" id="input-field-table">
+              <thead>
+                <tr>
+                  <th style="width:180px;">항목명</th>
+                  <th style="width:120px;">입력 방식</th>
+                  <th colspan="3" style="text-align:center;">사용 설정</th>
+                </tr>
+                <tr>
+                  <th></th><th></th>
+                  <th style="width:70px;text-align:center;">미사용</th>
+                  <th style="width:70px;text-align:center;">선택</th>
+                  <th style="width:70px;text-align:center;">필수</th>
+                </tr>
+              </thead>
+              <tbody id="input-field-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-reset" onclick="closeIdpModal('idp-input-field-modal')">취소</button>
+          <button class="btn btn-primary" onclick="saveInputFieldSettings()">저장</button>
         </div>
       </div>
     </div>
@@ -4317,6 +4324,60 @@ function saveLimitModal() {
   var btn = document.getElementById('lmt-target-btn');
   if (btn) btn.style.display = 'none';
   buildLimitTable();
+}
+
+/* ── 입력항목 설정 모달 ── */
+var _inputFieldDefs = [
+  { key:'plan_month',     name:'계획월',          method:'직접 선택',     default:'required' },
+  { key:'plan_type',      name:'계획수립 유형',    method:'설정된 계획수립 유형 중 선택', default:'required' },
+  { key:'learn_type',     name:'학습 유형',        method:'설정된 기타 학습 유형 중 선택', default:'required' },
+  { key:'edu_name',       name:'교육명',           method:'직접 입력',     default:'required' },
+  { key:'edu_period',     name:'교육기간',         method:'시작/종료 년월일 선택', default:'required' },
+  { key:'edu_time',       name:'교육일/시간',      method:'NN일 hh시간 직접 입력', default:'optional' },
+  { key:'edu_cost',       name:'교육비용',         method:'직접 입력 (원)',  default:'optional' },
+  { key:'credit',         name:'학점',             method:'직접 입력',     default:'optional' },
+  { key:'plan_goal',      name:'계획 목표',        method:'직접 입력',     default:'optional' },
+  { key:'plan_content',   name:'계획 내용',        method:'에디터 (직접 입력)', default:'optional' },
+  { key:'attachment',     name:'첨부파일',         method:'직접 등록',     default:'none'     },
+];
+
+var _inputFieldSettings = {};
+
+function openInputFieldModal(typeName) {
+  document.getElementById('input-field-type-name').textContent = typeName;
+  var tbody = document.getElementById('input-field-tbody');
+  tbody.innerHTML = _inputFieldDefs.map(function(field) {
+    var saved = _inputFieldSettings[typeName] && _inputFieldSettings[typeName][field.key];
+    var cur = saved || field.default;
+    var mkRadio = function(val, label) {
+      var checked = cur === val ? 'checked' : '';
+      return '<td style="text-align:center;">'
+        + '<label class="radio-row" style="justify-content:center;">'
+        + '<input type="radio" name="ifield-' + typeName.replace(/[^a-zA-Z0-9]/g,'_') + '-' + field.key + '" value="' + val + '" ' + checked + '>'
+        + '</label></td>';
+    };
+    return '<tr>'
+      + '<td style="font-weight:600;font-size:13px;">' + field.name + '</td>'
+      + '<td style="font-size:12px;color:#666;">' + field.method + '</td>'
+      + mkRadio('none',     '미사용')
+      + mkRadio('optional', '선택')
+      + mkRadio('required', '필수')
+      + '</tr>';
+  }).join('');
+  openIdpModal('idp-input-field-modal');
+}
+
+function saveInputFieldSettings() {
+  var typeName = document.getElementById('input-field-type-name').textContent;
+  var settings = {};
+  _inputFieldDefs.forEach(function(field) {
+    var nameAttr = 'ifield-' + typeName.replace(/[^a-zA-Z0-9]/g,'_') + '-' + field.key;
+    var checked = document.querySelector('#idp-input-field-modal input[name="' + nameAttr + '"]:checked');
+    if (checked) settings[field.key] = checked.value;
+  });
+  _inputFieldSettings[typeName] = settings;
+  closeIdpModal('idp-input-field-modal');
+  alert('[' + typeName + '] 입력항목 설정이 저장되었습니다.');
 }
 
 function openLimitModal() {
