@@ -2453,11 +2453,11 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                   <thead><tr><th>타이틀</th><th>대상자</th><th>대상과정</th><th>제한조건</th><th>기간</th><th>제한수</th><th>삭제</th></tr></thead>
                   <tbody>
                     <tr>
-                      <td>온라인 2개까지</td><td>전사</td><td>과정 전체</td><td>개수제한</td><td>없음</td><td>3 이하</td>
+                      <td>온라인 2개까지</td><td>전사</td><td>과정 전체</td><td>학점, 개수</td><td>없음</td><td>3 이하</td>
                       <td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td>
                     </tr>
                     <tr>
-                      <td>오프라인 1개만</td><td>사원-대리, 과장-차장</td><td>온라인</td><td>개수제한</td><td>월별</td><td>2 이상</td>
+                      <td>오프라인 1개만</td><td>사원-대리, 과장-차장</td><td>온라인</td><td>개수, 비용</td><td>월별</td><td>2 이상</td>
                       <td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td>
                     </tr>
                   </tbody>
@@ -2808,9 +2808,14 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 </label>
               </div>
             </div>
-            <div class="ifg-row">
-              <div class="ifg-label">제한조건</div>
-              <div class="ifg-control"><label class="checkbox-row"><input type="checkbox" checked> 개수제한</label></div>
+            <div class="ifg-row" style="align-items:flex-start;padding-top:8px;">
+              <div class="ifg-label" style="padding-top:2px;">제한조건</div>
+              <div class="ifg-control" style="gap:12px;flex-wrap:wrap;">
+                <label class="checkbox-row"><input type="checkbox" checked> 학점</label>
+                <label class="checkbox-row"><input type="checkbox"> 시간</label>
+                <label class="checkbox-row"><input type="checkbox" checked> 개수</label>
+                <label class="checkbox-row"><input type="checkbox"> 비용</label>
+              </div>
             </div>
             <div class="ifg-row">
               <div class="ifg-label">기간 제한</div>
