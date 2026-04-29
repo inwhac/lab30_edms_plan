@@ -2224,6 +2224,30 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                   </div>
                 </div>
 
+                <!-- ── 계획수립 대상 ── -->
+                <div class="form-section-title" style="margin-top:22px">계획수립 대상</div>
+                <div class="idp-form-grid">
+                  <div class="ifg-row" style="align-items:flex-start;padding-top:8px;">
+                    <div class="ifg-label required" style="padding-top:3px;">대상 구분</div>
+                    <div class="ifg-control" style="flex-direction:column;align-items:flex-start;gap:10px;">
+                      <div style="display:flex;gap:16px;align-items:center;">
+                        <label class="radio-row"><input type="radio" name="plan-target" value="all" checked onchange="onPlanTargetChange(this)"> 전체 임직원</label>
+                        <label class="radio-row"><input type="radio" name="plan-target" value="group" onchange="onPlanTargetChange(this)"> 대상구분 선택</label>
+                        <button class="btn btn-reset btn-sm" id="target-group-btn" style="display:none;" onclick="openTargetGroupPopup()">대상구분 선택</button>
+                      </div>
+                      <!-- 선택된 대상구분 테이블 (대상구분 선택 시 노출) -->
+                      <div id="target-group-table-wrap" style="display:none;width:100%;">
+                        <table class="main-table" style="width:auto;min-width:280px;">
+                          <thead><tr><th>NO</th><th>대상구분명</th><th>삭제</th></tr></thead>
+                          <tbody id="target-group-tbody">
+                            <tr id="target-group-empty"><td colspan="3" style="text-align:center;color:#bbb;font-size:12px;padding:12px 0;">선택된 대상구분이 없습니다.</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- ── 계획수립 월 적용 ── -->
                 <div class="form-section-title" style="margin-top:22px">계획수립 월 적용</div>
                 <div class="idp-form-grid">
@@ -3295,6 +3319,46 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
       </div>
     </div>
 
+    <!-- 계획수립 대상구분 팝업 -->
+    <div class="modal-overlay" id="idp-target-group-modal" onclick="if(event.target===this)closeIdpModal('idp-target-group-modal')">
+      <div class="modal-box" style="width:420px;">
+        <div class="modal-header">
+          <span>대상구분 선택</span>
+          <button class="modal-close" onclick="closeIdpModal('idp-target-group-modal')">×</button>
+        </div>
+        <div class="modal-body" style="padding:18px 24px;">
+          <div style="font-size:12px;color:#666;margin-bottom:12px;">계획수립 대상이 될 구분을 선택해주세요. (복수 선택 가능)</div>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="target-group-checkboxes">
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="임원"> 임원
+            </label>
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="팀장급"> 팀장급
+            </label>
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="부장"> 부장
+            </label>
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="차장"> 차장
+            </label>
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="과장"> 과장
+            </label>
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="대리"> 대리
+            </label>
+            <label class="checkbox-row" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+              <input type="checkbox" class="tg-chk" value="사원"> 사원
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-reset" onclick="closeIdpModal('idp-target-group-modal')">취소</button>
+          <button class="btn btn-primary" onclick="applyTargetGroup()">선택 완료</button>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -4026,6 +4090,55 @@ function closeIdpModal(id) {
   const m = document.getElementById(id);
   if (m) { m.classList.remove('open'); document.body.style.overflow = ''; }
 }
+function onPlanTargetChange(radio) {
+  var btn  = document.getElementById('target-group-btn');
+  var wrap = document.getElementById('target-group-table-wrap');
+  if (radio.value === 'group') {
+    btn.style.display  = '';
+    wrap.style.display = '';
+  } else {
+    btn.style.display  = 'none';
+    wrap.style.display = 'none';
+    // 전체 임직원 선택 시 기존 선택 초기화
+    document.querySelectorAll('.tg-chk').forEach(function(c) { c.checked = false; });
+    renderTargetGroupTable([]);
+  }
+}
+
+function openTargetGroupPopup() {
+  openIdpModal('idp-target-group-modal');
+}
+
+function applyTargetGroup() {
+  var selected = Array.from(document.querySelectorAll('.tg-chk:checked')).map(function(c) { return c.value; });
+  renderTargetGroupTable(selected);
+  closeIdpModal('idp-target-group-modal');
+}
+
+function renderTargetGroupTable(list) {
+  var tbody = document.getElementById('target-group-tbody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr id="target-group-empty"><td colspan="3" style="text-align:center;color:#bbb;font-size:12px;padding:12px 0;">선택된 대상구분이 없습니다.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(function(name, i) {
+    return '<tr>'
+      + '<td>' + (i + 1) + '</td>'
+      + '<td>' + name + '</td>'
+      + '<td><button class="btn-sm btn-danger-sm" onclick="removeTargetGroup(this,\'' + name + '\')">삭제</button></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function removeTargetGroup(btn, name) {
+  var chk = document.querySelector('.tg-chk[value="' + name + '"]');
+  if (chk) chk.checked = false;
+  btn.closest('tr').remove();
+  if (!document.getElementById('target-group-tbody').querySelector('tr:not(#target-group-empty)')) {
+    renderTargetGroupTable([]);
+  }
+}
+
 function onPlanUseChange(radio) {
   var listArea = document.getElementById('plan-list-area');
   if (!listArea) return;
