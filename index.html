@@ -2385,7 +2385,6 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
               <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:14px;">
                 <button class="btn-subtab active" id="st-common" onclick="switchLimitSub('common')">공통 제한조건</button>
                 <button class="btn-subtab" id="st-personal" onclick="switchLimitSub('personal')">개인별 제한조건</button>
-                <button class="btn-subtab" id="st-course-lmt" onclick="switchLimitSub('course-lmt')">과정 제한설정</button>
                 <button class="btn-subtab" id="st-informal-lmt" onclick="switchLimitSub('informal-lmt')">기타 학습계획 제한설정</button>
               </div>
 
@@ -2463,26 +2462,6 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 </div>
               </div>
 
-              <!-- 과정 제한설정 -->
-              <div id="limit-sub-course-lmt" style="display:none;">
-                <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
-                  <button class="btn btn-primary btn-sm" onclick="openIdpModal('idp-course-limit-modal')">과정 제한 등록</button>
-                </div>
-                <table class="main-table">
-                  <thead><tr><th>타이틀</th><th>대상자</th><th>대상과정</th><th>제한조건</th><th>기간</th><th>제한수</th><th>삭제</th></tr></thead>
-                  <tbody>
-                    <tr>
-                      <td>온라인 2개까지</td><td>전사</td><td>과정 전체</td><td>학점, 개수</td><td>없음</td><td>3 이하</td>
-                      <td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td>
-                    </tr>
-                    <tr>
-                      <td>오프라인 1개만</td><td>사원-대리, 과장-차장</td><td>온라인</td><td>개수, 비용</td><td>월별</td><td>2 이상</td>
-                      <td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
               <!-- 비정형 제한설정 -->
               <div id="limit-sub-informal-lmt" style="display:none;">
                 <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
@@ -2548,6 +2527,28 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <div id="cat-depth-preview" style="display:none;margin-top:12px;">
                   <div style="font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:6px;">계획수립 유형으로 구성될 카테고리 미리보기</div>
                   <div id="cat-depth-preview-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+                </div>
+
+                <!-- 학습 유형 선택 -->
+                <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+                  <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;">
+                    학습 유형 선택 <span style="font-size:11px;font-weight:400;color:#888;">(복수 선택 가능)</span>
+                  </div>
+                  <div style="font-size:12px;color:#888;margin-bottom:10px;">선택한 학습 유형의 과정만 계획수립 대상으로 포함됩니다.</div>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <label class="depth-chip" id="lt-online" onclick="toggleLearnType('online', this)" style="cursor:pointer;">
+                      <input type="checkbox" name="learn-type" value="online" style="display:none;"> 온라인
+                    </label>
+                    <label class="depth-chip" id="lt-offline" onclick="toggleLearnType('offline', this)" style="cursor:pointer;">
+                      <input type="checkbox" name="learn-type" value="offline" style="display:none;"> 오프라인
+                    </label>
+                    <label class="depth-chip" id="lt-hybrid" onclick="toggleLearnType('hybrid', this)" style="cursor:pointer;">
+                      <input type="checkbox" name="learn-type" value="hybrid" style="display:none;"> 하이브리드
+                    </label>
+                    <label class="depth-chip" id="lt-micro" onclick="toggleLearnType('micro', this)" style="cursor:pointer;">
+                      <input type="checkbox" name="learn-type" value="micro" style="display:none;"> 마이크로러닝
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -3031,6 +3032,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
             </div>
           </div>
 
+          <!-- 달성현황 컬럼은 수립상태=완료 AND 계획 사용여부=사용인 경우에만 노출 -->
           <strong style="font-size:13px;">등록된 계획</strong>
           <table class="main-table" style="margin-top:8px;">
             <thead><tr>
@@ -3041,6 +3043,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
               <th>교육명</th>
               <th>예상 학습시간</th>
               <th>교육비</th>
+              <th>달성현황</th>
             </tr></thead>
             <tbody>
               <tr>
@@ -3051,6 +3054,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>리더십 역량 강화 과정</td>
                 <td>8시간</td>
                 <td>150,000원</td>
+                <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32;">달성</span></td>
               </tr>
               <tr>
                 <td>2026</td>
@@ -3060,6 +3064,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>데이터 분석 기초</td>
                 <td>12시간</td>
                 <td>무료</td>
+                <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32;">달성</span></td>
               </tr>
               <tr>
                 <td>2026</td>
@@ -3069,6 +3074,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>팀장 리더십 Workshop</td>
                 <td>16시간</td>
                 <td>200,000원</td>
+                <td><span class="badge-tag" style="background:#fdecea;color:#c62828;">미달성</span></td>
               </tr>
               <tr>
                 <td>2026</td>
@@ -3078,6 +3084,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td>외부 데이터사이언스 부트캠프</td>
                 <td>3일/24시간</td>
                 <td>500,000원</td>
+                <td><span class="badge-tag" style="background:#fdecea;color:#c62828;">미달성</span></td>
               </tr>
             </tbody>
           </table>
@@ -4278,7 +4285,7 @@ function renderLimitPanel() {
   document.getElementById('limit-content').style.display = v ? '' : 'none';
 }
 function switchLimitSub(sub) {
-  ['common','personal','course-lmt','informal-lmt'].forEach(s => {
+  ['common','personal','informal-lmt'].forEach(s => {
     const el = document.getElementById('limit-sub-' + s);
     const btn = document.getElementById('st-' + s);
     if (el) el.style.display = s === sub ? '' : 'none';
@@ -4312,6 +4319,21 @@ function savePersonalLimitRow(btn) {
 /* ── 계획수립 유형 설정 모드 ── */
 var _courseMode = null;   // 'category' | 'direct'
 var _catDepth   = null;   // 1 | 2 | 3
+var _learnTypes = [];     // 선택된 학습 유형 목록
+
+function toggleLearnType(key, label) {
+  var chk = label.querySelector('input[type="checkbox"]');
+  var idx = _learnTypes.indexOf(key);
+  if (idx === -1) {
+    _learnTypes.push(key);
+    label.classList.add('selected');
+    if (chk) chk.checked = true;
+  } else {
+    _learnTypes.splice(idx, 1);
+    label.classList.remove('selected');
+    if (chk) chk.checked = false;
+  }
+}
 
 var CAT_DEPTH_SAMPLES = {
   1: ['직무','인문/교양','IT/디지털','리더십','자기개발'],
@@ -4595,7 +4617,6 @@ function saveLimitModal() {
 var _inputFieldDefs = [
   { key:'plan_month',     name:'계획월',          method:'직접 선택',     default:'required' },
   { key:'plan_type',      name:'계획수립 유형',    method:'설정된 계획수립 유형 중 선택', default:'required' },
-  { key:'learn_type',     name:'학습 유형',        method:'설정된 기타 학습 유형 중 선택', default:'required' },
   { key:'edu_name',       name:'교육명',           method:'직접 입력',     default:'required' },
   { key:'edu_period',     name:'교육기간',         method:'시작/종료 년월일 선택', default:'required' },
   { key:'edu_time',       name:'교육일/시간',      method:'NN일 hh시간 직접 입력', default:'optional' },
