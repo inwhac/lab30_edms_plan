@@ -2340,8 +2340,14 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                     <div class="ifg-label">계획수립 버튼 노출</div>
                     <div class="ifg-control" style="gap:14px;flex-wrap:wrap;">
                       <label class="checkbox-row"><input type="checkbox" checked> 진단 추천과정</label>
-                      <label class="checkbox-row"><input type="checkbox" checked> 계획수립 과정검색</label>
                       <label class="checkbox-row"><input type="checkbox"> 기타 학습계획 등록</label>
+                    </div>
+                  </div>
+                  <div class="ifg-row">
+                    <div class="ifg-label">목표 작성</div>
+                    <div class="ifg-control" style="gap:16px;">
+                      <label class="radio-row"><input type="radio" name="career-goal"> 사용</label>
+                      <label class="radio-row"><input type="radio" name="career-goal" checked> 미사용</label>
                     </div>
                   </div>
                   <div class="ifg-row">
@@ -2349,13 +2355,6 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                     <div class="ifg-control" style="gap:16px;">
                       <label class="radio-row"><input type="radio" name="opinion-show" checked> 사용</label>
                       <label class="radio-row"><input type="radio" name="opinion-show"> 미사용</label>
-                    </div>
-                  </div>
-                  <div class="ifg-row">
-                    <div class="ifg-label">경력목표 작성</div>
-                    <div class="ifg-control" style="gap:16px;">
-                      <label class="radio-row"><input type="radio" name="career-goal"> 사용</label>
-                      <label class="radio-row"><input type="radio" name="career-goal" checked> 미사용</label>
                     </div>
                   </div>
                 </div>
@@ -3083,11 +3082,11 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
             </tbody>
           </table>
 
-          <!-- 경력 목표 (계획수립 기본 설정 > 경력목표 작성 '사용' 시 노출) -->
+          <!-- 경력 목표 (계획수립 기본 설정 > 목표 작성 '사용' 시 노출) -->
           <div style="margin-top:16px;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
               <strong style="font-size:13px;">경력 목표</strong>
-              <span style="font-size:11px;color:#888;font-weight:400;">※ 관리자 설정 '경력목표 작성 사용' 시 노출</span>
+              <span style="font-size:11px;color:#888;font-weight:400;">※ 관리자 설정 '목표 작성 사용' 시 노출</span>
             </div>
             <div style="padding:12px 14px;background:#f8f9fb;border:1px solid var(--border);border-radius:6px;font-size:13px;color:#333;line-height:1.7;">
               데이터 기반 의사결정 역량을 강화하여 2026년 내 데이터 분석 프로젝트 리더 역할을 수행하고자 합니다. 중장기적으로는 디지털 전환 전략 수립에 기여하는 시니어 기획자로 성장하는 것이 목표입니다.
