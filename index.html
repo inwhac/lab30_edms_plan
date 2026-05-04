@@ -2277,11 +2277,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                     <div class="ifg-control" style="flex-direction:column;align-items:flex-start;gap:8px;">
                       <table class="main-table" style="width:auto;min-width:260px">
                         <thead><tr><th>연도</th><th>계획수립 월</th><th>삭제</th></tr></thead>
-                        <tbody id="plan-month-tbody">
-                          <tr><td>2026</td><td>1월</td><td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td></tr>
-                          <tr><td>2026</td><td>2월</td><td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td></tr>
-                          <tr><td>2026</td><td>3월</td><td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td></tr>
-                        </tbody>
+                        <tbody id="plan-month-tbody"></tbody>
                       </table>
                       <div style="display:flex;align-items:center;gap:8px;">
                         <select class="select" id="month-year-sel" style="width:90px">
@@ -2340,15 +2336,15 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                   <div class="ifg-row">
                     <div class="ifg-label">계획수립 버튼 노출</div>
                     <div class="ifg-control" style="gap:14px;flex-wrap:wrap;">
-                      <label class="checkbox-row"><input type="checkbox" checked> 진단 추천과정</label>
+                      <label class="checkbox-row"><input type="checkbox"> 진단 추천과정</label>
                       <label class="checkbox-row"><input type="checkbox"> 기타 학습계획 등록</label>
                     </div>
                   </div>
                   <div class="ifg-row">
                     <div class="ifg-label">목표 작성</div>
                     <div class="ifg-control" style="gap:16px;">
-                      <label class="radio-row"><input type="radio" name="career-goal"> 사용</label>
-                      <label class="radio-row"><input type="radio" name="career-goal" checked> 미사용</label>
+                      <label class="radio-row"><input type="radio" name="career-goal" checked> 사용</label>
+                      <label class="radio-row"><input type="radio" name="career-goal"> 미사용</label>
                     </div>
                   </div>
                   <div class="ifg-row">
@@ -4239,6 +4235,7 @@ function savePlanUseYn() {
   alert('계획수립 사용 여부가 [' + label + '] 으로 저장되었습니다.');
 }
 function openIdpEdit(no) {
+  initPlanMonthDefaults();
   document.getElementById('idp-detail-panel').style.display = '';
   document.getElementById('idp-detail-title').textContent = no + '번 계획수립 설정 (수정)';
   document.getElementById('idp-detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -4695,6 +4692,29 @@ function openLimitModal() {
   if (row) row.style.display = 'none';
   buildLimitTable();
   openIdpModal('idp-limit-modal');
+}
+
+/* ── 계획수립 월 기본값 초기화 (현재 연도 1~12월) ── */
+function initPlanMonthDefaults() {
+  var tbody = document.getElementById('plan-month-tbody');
+  if (!tbody) return;
+  var year = new Date().getFullYear();
+  var rows = '';
+  for (var m = 1; m <= 12; m++) {
+    rows += '<tr>'
+      + '<td>' + year + '</td>'
+      + '<td>' + m + '월</td>'
+      + '<td><button class="btn-sm btn-danger-sm" onclick="this.closest(\'tr\').remove()">삭제</button></td>'
+      + '</tr>';
+  }
+  tbody.innerHTML = rows;
+  /* 연도 셀렉트도 현재 연도로 맞춤 */
+  var yearSel = document.getElementById('month-year-sel');
+  if (yearSel) {
+    Array.from(yearSel.options).forEach(function(opt) {
+      opt.selected = (parseInt(opt.text) === year);
+    });
+  }
 }
 
 function addTypeRow() {
