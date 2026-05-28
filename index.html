@@ -2419,19 +2419,16 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
 
               <!-- 개인별 제한조건 -->
               <div id="limit-sub-personal" style="display:none;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <input type="text" class="input" placeholder="이름/아이디/사번 검색" style="width:200px">
-                    <button class="btn btn-primary btn-sm">검색</button>
-                  </div>
-                  <button class="btn btn-primary btn-sm" onclick="addPersonalLimitRow()">추가</button>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                  <input type="text" id="personal-id-input" class="input" placeholder="아이디 입력" style="width:200px">
+                  <button class="btn btn-primary btn-sm" onclick="searchPersonalLimitRow()">검색</button>
                 </div>
                 <div style="overflow-x:auto;">
                   <table class="main-table" style="min-width:700px;">
                     <thead>
                       <tr>
-                        <th rowspan="2" style="vertical-align:middle;">이름</th>
                         <th rowspan="2" style="vertical-align:middle;">아이디</th>
+                        <th rowspan="2" style="vertical-align:middle;">이름</th>
                         <th colspan="4" style="text-align:center;background:#f0f4ff;">자기개발</th>
                         <th colspan="4" style="text-align:center;background:#f0fff8;">리더십</th>
                         <th rowspan="2" style="vertical-align:middle;">관리</th>
@@ -2443,7 +2440,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                     </thead>
                     <tbody id="personal-limit-tbody">
                       <tr>
-                        <td>김철수</td><td>sample-chuls</td>
+                        <td>sample-chuls</td><td>김철수</td>
                         <td><input type="number" class="input" style="width:52px" value="30"></td>
                         <td><input type="number" class="input" style="width:52px" value="10"></td>
                         <td><input type="number" class="input" style="width:52px" value="5"></td>
@@ -4299,26 +4296,59 @@ function switchLimitSub(sub) {
     if (btn) btn.classList.toggle('active', s === sub);
   });
 }
-function addPersonalLimitRow() {
+/* 아이디 검색 → 사용자 확인 → row 추가 */
+var _mockUsers = {
+  'kim.chulsoo': '김철수',
+  'lee.younghee': '이영희',
+  'park.minjun': '박민준',
+  'choi.jiyeon': '최지연'
+};
+
+function searchPersonalLimitRow() {
+  var inputEl = document.getElementById('personal-id-input');
+  var userId = inputEl.value.trim();
+
+  if (!userId) {
+    alert('아이디를 입력해주세요.');
+    return;
+  }
+
+  // 이미 테이블에 등록된 아이디 중복 체크
   var tbody = document.getElementById('personal-limit-tbody');
+  var existingIds = Array.from(tbody.querySelectorAll('tr')).map(function(tr) {
+    var td = tr.cells[0];
+    return td ? td.textContent.trim() : '';
+  });
+  if (existingIds.indexOf(userId) !== -1) {
+    alert('이미 개인별 제한조건이 등록된 사용자입니다.');
+    return;
+  }
+
+  // 아이디 존재 여부 체크 (mock)
+  var userName = _mockUsers[userId];
+  if (!userName) {
+    alert('등록되지 않은 아이디입니다.');
+    return;
+  }
+
+  // row 추가
   var tr = document.createElement('tr');
   var inp = function(w) { return '<input type="number" class="input" style="width:' + w + 'px" placeholder="-" min="0">'; };
-  tr.innerHTML = '<td><input type="text" class="input" placeholder="이름" style="width:70px"></td>'
-    + '<td><input type="text" class="input" placeholder="아이디" style="width:100px"></td>'
+  tr.innerHTML = '<td>' + userId + '</td>'
+    + '<td>' + userName + '</td>'
     + '<td>' + inp(52) + '</td><td>' + inp(52) + '</td><td>' + inp(52) + '</td><td>' + inp(62) + '</td>'
     + '<td>' + inp(52) + '</td><td>' + inp(52) + '</td><td>' + inp(52) + '</td><td>' + inp(62) + '</td>'
     + '<td><button class="btn-sm" onclick="savePersonalLimitRow(this)">저장</button> <button class="btn-sm btn-danger-sm" onclick="this.closest(\'tr\').remove()">삭제</button></td>';
   tbody.insertBefore(tr, tbody.firstChild);
+  inputEl.value = '';
 }
+
 function savePersonalLimitRow(btn) {
   var row = btn.closest('tr');
-  var inputs = row.querySelectorAll('input');
-  var name = inputs[0].value.trim();
-  var id = inputs[1].value.trim();
-  // 모든 값 필수 입력 체크
+  var inputs = row.querySelectorAll('input[type="number"]');
   var allFilled = Array.from(inputs).every(function(i) { return i.value.trim() !== ''; });
   if (!allFilled) {
-    alert('모든 값 필수 입력 체크, 아이디의 경우 유효성 검토 진행');
+    alert('제한 값을 모두 입력해주세요.');
     return;
   }
   alert('저장되었습니다.');
