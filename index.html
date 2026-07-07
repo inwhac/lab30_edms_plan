@@ -2294,37 +2294,47 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                   </div>
                 </div>
 
-                <!-- ── 진단 연결 ── -->
-                <div class="form-section-title" style="margin-top:22px">진단 연결</div>
+                <!-- ── 진단 연결 (섹션 ④ / 2차 후속 적용) ── -->
+                <div class="form-section-title" style="margin-top:22px">진단 연결 <span style="font-size:11px;font-weight:600;color:#e65100;background:#fff8e1;padding:2px 8px;border-radius:10px;margin-left:6px;">2차 후속 적용 (진단)</span></div>
                 <div class="idp-form-grid">
+                  <!-- 진단 연결 여부 (항상 노출) -->
                   <div class="ifg-row">
-                    <div class="ifg-label">휴넷 진단 연결 여부</div>
+                    <div class="ifg-label">진단 연결 여부</div>
                     <div class="ifg-control" style="gap:16px;">
                       <label class="radio-row"><input type="radio" name="diag-link" value="Y" onchange="toggleDiagLink(this)"> 연결</label>
                       <label class="radio-row"><input type="radio" name="diag-link" value="N" checked onchange="toggleDiagLink(this)"> 미연결</label>
                     </div>
                   </div>
+                  <!-- '연결' 선택 시에만 노출 -->
                   <div id="diag-link-area" style="display:none;">
+                    <!-- 연결 진단 (진단 1 : 계획수립 N / 계획수립 1개당 진단 1개 = 1:1 매핑) -->
                     <div class="ifg-row" style="align-items:flex-start">
                       <div class="ifg-label">연결 진단</div>
                       <div class="ifg-control" style="flex-direction:column;align-items:flex-start;gap:8px;">
-                        <table class="main-table" style="width:auto;min-width:300px">
-                          <thead><tr><th>진단번호</th><th>진단명</th><th>삭제</th></tr></thead>
+                        <table class="main-table" style="width:auto;min-width:360px">
+                          <thead><tr><th>진단명</th><th style="width:70px">삭제</th></tr></thead>
                           <tbody id="diag-tbody">
-                            <tr><td>215</td><td>2026 전사 역량진단</td><td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td></tr>
+                            <tr id="diag-empty-row"><td colspan="2" style="color:#aaa;">연결된 진단이 없습니다.</td></tr>
                           </tbody>
                         </table>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                          <input type="text" class="input" id="diag-no-input" placeholder="진단번호 입력" style="width:130px">
-                          <button class="btn btn-primary btn-sm" onclick="addDiag()">추가</button>
-                        </div>
+                        <button class="btn btn-primary btn-sm" id="diag-add-btn" onclick="openDiagPicker()">진단 추가하기</button>
+                        <div style="font-size:11px;color:#888;">※ 계획수립 1개당 진단 1개만 연결 가능 — 1건 연결 시 [진단 추가하기] 비활성 (삭제 후 재활성)</div>
                       </div>
                     </div>
+                    <!-- 진단 필수 여부 -->
                     <div class="ifg-row">
-                      <div class="ifg-label">연결 진단 필수여부</div>
+                      <div class="ifg-label">진단 필수 여부</div>
                       <div class="ifg-control" style="flex-direction:column;align-items:flex-start;gap:5px;">
                         <label class="radio-row"><input type="radio" name="diag-req" checked> 진단 완료 후 계획수립 가능</label>
                         <label class="radio-row"><input type="radio" name="diag-req"> 진단 미완료 시에도 가능</label>
+                      </div>
+                    </div>
+                    <!-- 진단 추천 과정 노출 여부 -->
+                    <div class="ifg-row">
+                      <div class="ifg-label">진단 추천 과정 노출 여부</div>
+                      <div class="ifg-control" style="gap:16px;">
+                        <label class="radio-row"><input type="radio" name="diag-rec" value="Y"> 노출</label>
+                        <label class="radio-row"><input type="radio" name="diag-rec" value="N" checked> 미노출</label>
                       </div>
                     </div>
                   </div>
@@ -2336,7 +2346,6 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                   <div class="ifg-row">
                     <div class="ifg-label">계획수립 버튼 노출</div>
                     <div class="ifg-control" style="gap:14px;flex-wrap:wrap;">
-                      <label class="checkbox-row"><input type="checkbox"> 진단 추천과정</label>
                       <label class="checkbox-row"><input type="checkbox"> 기타 학습계획 등록</label>
                     </div>
                   </div>
@@ -2359,6 +2368,77 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <div style="margin-top:24px;display:flex;gap:8px;justify-content:flex-start;padding-left:160px;">
                   <button class="btn btn-reset" onclick="closeIdpDetail()">취소</button>
                   <button class="btn btn-primary" onclick="saveIdpPlan()">등록</button>
+                </div>
+
+                <!-- ══ 진단 추가하기 팝업 (진단 목록) ══ -->
+                <div class="preview-modal-overlay" id="diagPickerOverlay">
+                  <div class="preview-modal" style="max-width:820px">
+                    <div class="preview-modal-header">
+                      <h3>진단 추가하기</h3>
+                      <button class="btn-sm" onclick="closeDiagPicker()">✕</button>
+                    </div>
+                    <div class="preview-modal-body">
+                      <div style="font-size:12px;color:#888;margin-bottom:12px;">현재 연수원에 셋팅된 진단 목록입니다. 계획수립에 연결할 진단 1개를 선택해주세요.</div>
+                      <table class="main-table">
+                        <thead>
+                          <tr>
+                            <th style="width:88px">선택</th>
+                            <th style="width:230px">진단기간</th>
+                            <th>진단명</th>
+                            <th style="width:96px">상태</th>
+                            <th style="width:104px">등록일</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><button class="btn-sm" onclick="pickDiag('2026년 하반기 임원 역량진단')">추가하기</button></td>
+                            <td>-</td>
+                            <td style="text-align:left">2026년 하반기 임원 역량진단</td>
+                            <td><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#f3f4f6;color:#888;">임시저장</span></td>
+                            <td>2026.06.06</td>
+                          </tr>
+                          <tr>
+                            <td><button class="btn-sm" onclick="pickDiag('2025년 상반기 리더십 역량진단')">추가하기</button></td>
+                            <td>2025.05.01 00:00 ~ 2025.05.31 23:59</td>
+                            <td style="text-align:left">2025년 상반기 리더십 역량진단</td>
+                            <td><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#e8f5e9;color:#2e7d32;">진행중</span></td>
+                            <td>2025.04.20</td>
+                          </tr>
+                          <tr>
+                            <td><button class="btn-sm" onclick="pickDiag('신임 팀장 온보딩 역량진단')">추가하기</button></td>
+                            <td>2025.04.10 00:00 ~ 2025.04.30 23:59</td>
+                            <td style="text-align:left">신임 팀장 온보딩 역량진단</td>
+                            <td><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#fff8e1;color:#e65100;">마감 가능</span></td>
+                            <td>2025.03.31</td>
+                          </tr>
+                          <tr>
+                            <td><button class="btn-sm" onclick="pickDiag('2026년 하반기 전사 역량진단')">추가하기</button></td>
+                            <td>2026.08.01 00:00 ~ 2026.08.31 23:59</td>
+                            <td style="text-align:left">2026년 하반기 전사 역량진단</td>
+                            <td><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#e3f2fd;color:#1565c0;">대기</span></td>
+                            <td>2026.05.01</td>
+                          </tr>
+                          <tr>
+                            <td><button class="btn-sm" onclick="pickDiag('2025년 2분기 마케팅팀 역량진단')">추가하기</button></td>
+                            <td>2025.03.03 00:00 ~ 2025.03.28 23:59</td>
+                            <td style="text-align:left">2025년 2분기 마케팅팀 역량진단</td>
+                            <td><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#f3e5f5;color:#7b1fa2;">리포트 생성중</span></td>
+                            <td>2025.03.28</td>
+                          </tr>
+                          <tr>
+                            <td><button class="btn-sm" onclick="pickDiag('2024년 하반기 리더십 역량진단')">추가하기</button></td>
+                            <td>2024.11.01 00:00 ~ 2024.11.30 23:59</td>
+                            <td style="text-align:left">2024년 하반기 리더십 역량진단</td>
+                            <td><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#eceff1;color:#546e7a;">완료</span></td>
+                            <td>2024.10.01</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="preview-modal-footer" style="justify-content:flex-end;">
+                      <button class="btn btn-reset" onclick="closeDiagPicker()">닫기</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4243,6 +4323,12 @@ function closeIdpDetail() {
 function saveIdpPlan() {
   const name = document.getElementById('idp-name').value.trim();
   if (!name) { alert('계획수립명을 입력해주세요.'); return; }
+  /* 진단 연결 여부 = '연결' 인데 연결된 진단이 없으면 저장 차단 */
+  const diagLink = document.querySelector('input[name="diag-link"]:checked');
+  if (diagLink && diagLink.value === 'Y') {
+    const connected = document.querySelector('#diag-tbody tr:not(#diag-empty-row)');
+    if (!connected) { alert('연결할 진단을 선택해주세요.'); return; }
+  }
   alert('등록되었습니다.');
   closeIdpDetail();
 }
@@ -4262,10 +4348,11 @@ function syncCompanySub(prefix) {
 }
 /* 하위 체크박스 전부 체크 시 전체도 체크, 전체 해제 시 하위 모두 해제는 syncCompanyAll 에서 처리 */
 
-/* 휴넷 진단 연결 토글 */
+/* 진단 연결 토글 — 미연결 전환 시 선택 상태 초기화 */
 function toggleDiagLink(radio) {
   const area = document.getElementById('diag-link-area');
   if (area) area.style.display = radio.value === 'Y' ? '' : 'none';
+  if (radio.value === 'N' && document.getElementById('diag-tbody')) removeDiag();
 }
 function addPlanMonth() {
   const y = document.getElementById('month-year-sel').value;
@@ -4275,14 +4362,33 @@ function addPlanMonth() {
   tr.innerHTML = `<td>${y.replace('년','')}</td><td>${m}</td><td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td>`;
   tbody.appendChild(tr);
 }
-function addDiag() {
-  const no = document.getElementById('diag-no-input').value.trim();
-  if (!no) { alert('진단번호를 먼저 선택해주세요.'); return; }
+/* 진단 추가하기 팝업 (진단 목록) */
+function openDiagPicker() {
+  const btn = document.getElementById('diag-add-btn');
+  if (btn && btn.disabled) return; /* 1:1 매핑 — 1건 연결 시 비활성 */
+  document.getElementById('diagPickerOverlay').classList.add('open');
+}
+function closeDiagPicker() {
+  document.getElementById('diagPickerOverlay').classList.remove('open');
+}
+/* 목록에서 진단 선택 → 팝업 닫힘 → 진단명 + [삭제] row 노출, [진단 추가하기] 비활성 */
+function pickDiag(name) {
   const tbody = document.getElementById('diag-tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${no}</td><td>진단명 (${no})</td><td><button class="btn-sm btn-danger-sm" onclick="this.closest('tr').remove()">삭제</button></td>`;
-  tbody.appendChild(tr);
-  document.getElementById('diag-no-input').value = '';
+  tbody.innerHTML = `<tr><td style="text-align:left">${name}</td><td><button class="btn-sm btn-danger-sm" onclick="removeDiag()">삭제</button></td></tr>`;
+  const btn = document.getElementById('diag-add-btn');
+  btn.disabled = true;
+  btn.style.opacity = '0.4';
+  btn.style.cursor = 'default';
+  closeDiagPicker();
+}
+/* 연결 진단 삭제 → 빈 상태 복원, [진단 추가하기] 재활성 */
+function removeDiag() {
+  const tbody = document.getElementById('diag-tbody');
+  tbody.innerHTML = `<tr id="diag-empty-row"><td colspan="2" style="color:#aaa;">연결된 진단이 없습니다.</td></tr>`;
+  const btn = document.getElementById('diag-add-btn');
+  btn.disabled = false;
+  btn.style.opacity = '';
+  btn.style.cursor = '';
 }
 function renderLimitPanel() {
   const v = document.getElementById('limit-plan-sel').value;
