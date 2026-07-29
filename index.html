@@ -2297,15 +2297,15 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <!-- ── 진단 연결 (섹션 ④ / 2차 후속 적용) ── -->
                 <div class="form-section-title" style="margin-top:22px">진단 연결 <span style="font-size:11px;font-weight:600;color:#e65100;background:#fff8e1;padding:2px 8px;border-radius:10px;margin-left:6px;">2차 후속 적용 (진단)</span></div>
                 <div class="idp-form-grid">
-                  <!-- 진단 연결 여부 (항상 노출) -->
+                  <!-- 진단 추천 과정 노출 여부 (항상 노출 / 마스터 토글) -->
                   <div class="ifg-row">
-                    <div class="ifg-label">진단 연결 여부</div>
+                    <div class="ifg-label">진단 추천 과정 노출 여부</div>
                     <div class="ifg-control" style="gap:16px;">
-                      <label class="radio-row"><input type="radio" name="diag-link" value="Y" onchange="toggleDiagLink(this)"> 연결</label>
-                      <label class="radio-row"><input type="radio" name="diag-link" value="N" checked onchange="toggleDiagLink(this)"> 미연결</label>
+                      <label class="radio-row"><input type="radio" name="diag-rec" value="Y" onchange="toggleDiagRec(this)"> 노출</label>
+                      <label class="radio-row"><input type="radio" name="diag-rec" value="N" checked onchange="toggleDiagRec(this)"> 미노출</label>
                     </div>
                   </div>
-                  <!-- '연결' 선택 시에만 노출 -->
+                  <!-- '노출' 선택 시에만 노출 -->
                   <div id="diag-link-area" style="display:none;">
                     <!-- 연결 진단 (진단 1 : 계획수립 N / 계획수립 1개당 진단 1개 = 1:1 매핑) -->
                     <div class="ifg-row" style="align-items:flex-start">
@@ -2327,14 +2327,6 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                       <div class="ifg-control" style="flex-direction:column;align-items:flex-start;gap:5px;">
                         <label class="radio-row"><input type="radio" name="diag-req" checked> 진단 완료 후 계획수립 가능</label>
                         <label class="radio-row"><input type="radio" name="diag-req"> 진단 미완료 시에도 가능</label>
-                      </div>
-                    </div>
-                    <!-- 진단 추천 과정 노출 여부 -->
-                    <div class="ifg-row">
-                      <div class="ifg-label">진단 추천 과정 노출 여부</div>
-                      <div class="ifg-control" style="gap:16px;">
-                        <label class="radio-row"><input type="radio" name="diag-rec" value="Y"> 노출</label>
-                        <label class="radio-row"><input type="radio" name="diag-rec" value="N" checked> 미노출</label>
                       </div>
                     </div>
                   </div>
@@ -4323,9 +4315,9 @@ function closeIdpDetail() {
 function saveIdpPlan() {
   const name = document.getElementById('idp-name').value.trim();
   if (!name) { alert('계획수립명을 입력해주세요.'); return; }
-  /* 진단 연결 여부 = '연결' 인데 연결된 진단이 없으면 저장 차단 */
-  const diagLink = document.querySelector('input[name="diag-link"]:checked');
-  if (diagLink && diagLink.value === 'Y') {
+  /* 진단 추천 과정 = '노출' 인데 연결된 진단이 없으면 저장 차단 */
+  const diagRec = document.querySelector('input[name="diag-rec"]:checked');
+  if (diagRec && diagRec.value === 'Y') {
     const connected = document.querySelector('#diag-tbody tr:not(#diag-empty-row)');
     if (!connected) { alert('연결할 진단을 선택해주세요.'); return; }
   }
@@ -4348,8 +4340,8 @@ function syncCompanySub(prefix) {
 }
 /* 하위 체크박스 전부 체크 시 전체도 체크, 전체 해제 시 하위 모두 해제는 syncCompanyAll 에서 처리 */
 
-/* 진단 연결 토글 — 미연결 전환 시 선택 상태 초기화 */
-function toggleDiagLink(radio) {
+/* 진단 추천 과정 노출 토글 — 미노출 전환 시 연결 진단 초기화 */
+function toggleDiagRec(radio) {
   const area = document.getElementById('diag-link-area');
   if (area) area.style.display = radio.value === 'Y' ? '' : 'none';
   if (radio.value === 'N' && document.getElementById('diag-tbody')) removeDiag();
