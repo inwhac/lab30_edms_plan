@@ -1576,6 +1576,72 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
   .ifg-control {
     display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;
   }
+
+  /* ── 기타 학습계획 상세 조회 (accordion) ── */
+  .etc-name-link {
+    color: var(--primary); cursor: pointer; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .etc-name-link:hover { text-decoration: underline; }
+  .etc-name-link .etc-chev {
+    font-size: 9px; transition: transform .2s ease; color: var(--primary);
+  }
+  .etc-name-link.open .etc-chev { transform: rotate(90deg); }
+  .etc-detail-row { display: none; }
+  .etc-detail-row.open { display: table-row; }
+  .etc-detail-row > td {
+    background: #f8f9fb !important; padding: 0 !important;
+    border: 1px solid #e8eaed; border-top: none;
+  }
+  .etc-detail-panel { padding: 16px 18px; text-align: left; }
+  .etc-detail-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .etc-detail-head strong { font-size: 13px; color: #1a1a2e; }
+  .etc-detail-head .etc-snap {
+    font-size: 10px; font-weight: 600; color: #2e7d32;
+    background: #e8f5e9; border-radius: 4px; padding: 2px 7px;
+  }
+  .etc-detail-head .etc-hint {
+    margin-left: auto; font-size: 11px; color: #999; font-weight: 400;
+  }
+  .etc-detail-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 18px;
+    padding: 14px 16px; background: #fff;
+    border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px;
+  }
+  .etc-fld .etc-k { font-size: 11px; color: #888; margin-bottom: 3px; }
+  .etc-fld .etc-v { font-size: 13px; color: #222; font-weight: 600; }
+  .etc-fld .etc-v.dash { color: #bbb; font-weight: 400; }
+  .etc-block { margin-bottom: 12px; }
+  .etc-block:last-child { margin-bottom: 0; }
+  .etc-block .etc-k { font-size: 11px; color: #888; margin-bottom: 5px; }
+  .etc-textbox {
+    padding: 11px 14px; background: #fff; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 13px; color: #333; line-height: 1.7;
+  }
+  .etc-textbox.dash { color: #bbb; }
+  .etc-contentbox {
+    padding: 13px 15px; background: #fff; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 13px; color: #444; line-height: 1.7;
+    max-height: 150px; overflow-y: auto;
+  }
+  .etc-contentbox p { margin: 0 0 7px; }
+  .etc-contentbox ul { margin: 6px 0 0; padding-left: 18px; }
+  .etc-contentbox li { margin-bottom: 3px; }
+  .etc-contentbox strong { color: #222; }
+  .etc-files { display: flex; flex-wrap: wrap; gap: 8px; }
+  .etc-file {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 12px; background: #fff; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 12px; color: #333; cursor: pointer;
+  }
+  .etc-file:hover { background: #f0f4ff; border-color: var(--primary); }
+  .etc-file .etc-ext {
+    font-size: 10px; font-weight: 700; color: #fff; background: var(--primary);
+    border-radius: 3px; padding: 2px 6px;
+  }
+  .etc-file .etc-dl { color: #999; font-size: 11px; }
 </style>
 </head>
 <body>
@@ -3097,6 +3163,7 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
               <th>달성현황</th>
             </tr></thead>
             <tbody>
+              <!-- 일반 과정: 상세 없음 -->
               <tr>
                 <td>2026</td>
                 <td>3월</td>
@@ -3133,17 +3200,107 @@ iframe.popup-frame { flex: 1; border: none; width: 100%; }
                 <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">대기</span></td>
                 <td><span class="badge-tag" style="background:#fdecea;color:#c62828;">미달성</span></td>
               </tr>
+
+              <!-- 기타 학습계획 ①: 전 항목 입력 + 첨부 2건 -->
               <tr>
                 <td>2026</td>
                 <td>11월</td>
                 <td>리더십</td>
                 <td>사외교육</td>
-                <td>외부 데이터사이언스 부트캠프</td>
+                <td><span class="etc-name-link" id="etc-link-1" onclick="toggleEtcDetail(1)"><span class="etc-chev">▶</span>외부 데이터사이언스 부트캠프</span></td>
                 <td>3일/24시간</td>
                 <td>500,000원</td>
-                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">신청 전</span></td>
-                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">대기</span></td>
-                <td><span class="badge-tag" style="background:#fdecea;color:#c62828;">미달성</span></td>
+                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">해당없음</span></td>
+                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">해당없음</span></td>
+                <td><span class="badge-tag" style="background:#e8f5e9;color:#2e7d32;">달성</span></td>
+              </tr>
+              <tr class="etc-detail-row" id="etc-detail-1">
+                <td colspan="10">
+                  <div class="etc-detail-panel">
+                    <div class="etc-detail-head">
+                      <strong>기타 학습계획 상세</strong>
+                      <span class="etc-snap">저장 값 기준</span>
+                      <span class="etc-hint">등록 후 입력항목 설정이 바뀌어도 저장 당시 값을 그대로 표시</span>
+                    </div>
+                    <div class="etc-detail-grid">
+                      <div class="etc-fld"><div class="etc-k">교육명</div><div class="etc-v">외부 데이터사이언스 부트캠프</div></div>
+                      <div class="etc-fld"><div class="etc-k">학습 유형</div><div class="etc-v">사외교육</div></div>
+                      <div class="etc-fld"><div class="etc-k">계획수립 유형 <span style="color:#bbb;font-weight:400">(참고)</span></div><div class="etc-v">리더십</div></div>
+                      <div class="etc-fld"><div class="etc-k">계획월 <span style="color:#bbb;font-weight:400">(참고)</span></div><div class="etc-v">2026-11</div></div>
+                      <div class="etc-fld"><div class="etc-k">교육기간</div><div class="etc-v">2026.11.03 ~ 2026.11.05</div></div>
+                      <div class="etc-fld"><div class="etc-k">교육일/시간</div><div class="etc-v">3일 / 24시간</div></div>
+                      <div class="etc-fld"><div class="etc-k">교육비용</div><div class="etc-v">500,000원</div></div>
+                      <div class="etc-fld"><div class="etc-k">학점</div><div class="etc-v">2학점</div></div>
+                    </div>
+                    <div class="etc-block">
+                      <div class="etc-k">계획 목표</div>
+                      <div class="etc-textbox">실무 데이터 분석 파이프라인 구축 역량 확보 및 사내 분석 표준 프로세스 정립에 기여</div>
+                    </div>
+                    <div class="etc-block">
+                      <div class="etc-k">계획 내용</div>
+                      <div class="etc-contentbox">
+                        <p>3일 집중 과정으로 <strong>데이터 수집 → 전처리 → 모델링 → 시각화</strong> 전 과정을 실습한다.</p>
+                        <ul>
+                          <li>1일차: Python 기반 데이터 수집·전처리 실습</li>
+                          <li>2일차: 통계 분석 및 예측 모델 구축</li>
+                          <li>3일차: 대시보드 시각화 + 팀 프로젝트 발표</li>
+                        </ul>
+                        <p>수료 후 <strong>사내 분석 가이드 초안</strong>을 작성하여 팀에 공유할 예정.</p>
+                      </div>
+                    </div>
+                    <div class="etc-block">
+                      <div class="etc-k">첨부파일</div>
+                      <div class="etc-files">
+                        <div class="etc-file"><span class="etc-ext">PDF</span>부트캠프_커리큘럼.pdf<span class="etc-dl">↓ 다운로드</span></div>
+                        <div class="etc-file"><span class="etc-ext">PNG</span>참가신청_확인서.png<span class="etc-dl">↓ 다운로드</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- 기타 학습계획 ②: 학점·첨부 '미사용'(미노출) + 계획목표·내용 '선택' 미입력('-') + 무료 -->
+              <tr>
+                <td>2026</td>
+                <td>12월</td>
+                <td>자기개발</td>
+                <td>도서학습</td>
+                <td><span class="etc-name-link" id="etc-link-2" onclick="toggleEtcDetail(2)"><span class="etc-chev">▶</span>『데이터 중심 사고』 완독</span></td>
+                <td>5일/10시간</td>
+                <td>무료</td>
+                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">해당없음</span></td>
+                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">해당없음</span></td>
+                <td><span class="badge-tag" style="background:#f5f5f5;color:#757575;">예정</span></td>
+              </tr>
+              <tr class="etc-detail-row" id="etc-detail-2">
+                <td colspan="10">
+                  <div class="etc-detail-panel">
+                    <div class="etc-detail-head">
+                      <strong>기타 학습계획 상세</strong>
+                      <span class="etc-snap">저장 값 기준</span>
+                      <span class="etc-hint">'미사용' 항목(학점·첨부파일)은 미노출 · '선택' 항목 미입력은 '-' 표기</span>
+                    </div>
+                    <div class="etc-detail-grid">
+                      <div class="etc-fld"><div class="etc-k">교육명</div><div class="etc-v">『데이터 중심 사고』 완독</div></div>
+                      <div class="etc-fld"><div class="etc-k">학습 유형</div><div class="etc-v">도서학습</div></div>
+                      <div class="etc-fld"><div class="etc-k">계획수립 유형 <span style="color:#bbb;font-weight:400">(참고)</span></div><div class="etc-v">자기개발</div></div>
+                      <div class="etc-fld"><div class="etc-k">계획월 <span style="color:#bbb;font-weight:400">(참고)</span></div><div class="etc-v">2026-12</div></div>
+                      <div class="etc-fld"><div class="etc-k">교육기간</div><div class="etc-v">2026.12.01 ~ 2026.12.31</div></div>
+                      <div class="etc-fld"><div class="etc-k">교육일/시간</div><div class="etc-v">5일 / 10시간</div></div>
+                      <div class="etc-fld"><div class="etc-k">교육비용</div><div class="etc-v">무료</div></div>
+                      <!-- 학점: 입력항목 '미사용' → 셀 자체 미노출 -->
+                    </div>
+                    <div class="etc-block">
+                      <div class="etc-k">계획 목표</div>
+                      <div class="etc-textbox dash">-</div>
+                    </div>
+                    <div class="etc-block">
+                      <div class="etc-k">계획 내용</div>
+                      <div class="etc-textbox dash">-</div>
+                    </div>
+                    <!-- 첨부파일: 입력항목 '미사용' → 블록 자체 미노출 -->
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -4237,6 +4394,14 @@ function openIdpModal(id) {
 function closeIdpModal(id) {
   const m = document.getElementById(id);
   if (m) { m.classList.remove('open'); document.body.style.overflow = ''; }
+}
+// 기타 학습계획 상세 accordion 토글 (각 행 독립 전개)
+function toggleEtcDetail(n) {
+  const row  = document.getElementById('etc-detail-' + n);
+  const link = document.getElementById('etc-link-' + n);
+  if (!row) return;
+  const open = row.classList.toggle('open');
+  if (link) link.classList.toggle('open', open);
 }
 function onPlanTargetChange(radio) {
   var btn  = document.getElementById('target-group-btn');
